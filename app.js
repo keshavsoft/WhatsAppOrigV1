@@ -3,6 +3,7 @@ import { StartFunc as StartFuncPortListen } from "./PortListen.js";
 import { StartFunc as StartFuncFromEntryFile } from "./Projects/WaV1/entryFile.js";
 
 import { StartFunc as StartFuncKWSServer } from "./Projects/WebSocketServer/V2/entryFile.js";
+import { ReadFunc as ReadFuncFromChatLog } from "./CommonExpose/chatLog.js";
 
 import express from 'express';
 import http from 'http';
@@ -22,6 +23,12 @@ app.use('/', express.static(path.join(path.resolve(), 'Public')));
 
 app.get('/StartWA', (req, res) => {
     StartFuncFromEntryFile().then();
+});
+
+app.use("/ChatLog", (req, res) => {
+    const k1 = ReadFuncFromChatLog();
+
+    res.json(k1);
 });
 
 StartFuncKWSServer(server);

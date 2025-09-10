@@ -11,6 +11,7 @@ import { StartFunc as wASendMulti } from "./wASendMulti.js";
 
 let StartFunc = ({ inDataAsJson, inws, inClients, inWss, inChatLog, inSendFunc }) => {
     let LocalDataAsJson = inDataAsJson;
+    console.log("LocalDataAsJson : ", LocalDataAsJson);
 
     if ("Type" in LocalDataAsJson) {
         if (LocalDataAsJson.Type === "FromPeer") {

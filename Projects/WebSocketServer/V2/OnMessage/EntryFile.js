@@ -12,6 +12,8 @@ let StartFunc = ({ inData, inws, inClients, inWss, inChatLog, inSendFunc }) => {
     try {
         let LocalDataAsJson = JSON.parse(LocalData);
 
+        InsertFuncFromChatLog({ id: localWebSocketData.id, data: LocalDataAsJson, InOut: "In" });
+
         CommonMessageAsJson({ inDataAsJson: LocalDataAsJson, inws, inClients, inWss, inChatLog, inSendFunc });
 
         return;
