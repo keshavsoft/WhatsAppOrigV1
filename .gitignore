@@ -17,3 +17,5 @@ defineConfig.js
 # for whatsapp
 .wwebjs_cache
 .wwebjs_auth
+
+Data/
