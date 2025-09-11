@@ -1,39 +1,28 @@
-import { StartFunc as StartFuncPortListen } from "./PortListen.js";
-
-import { StartFunc as StartFuncFromEntryFile } from "./Projects/WaV1/entryFile.js";
-
-import { StartFunc as StartFuncKWSServer } from "./Projects/WebSocketServer/V2/entryFile.js";
-import { ReadFunc as ReadFuncFromChatLog } from "./CommonExpose/chatLog.js";
-
 import express from 'express';
-import http from 'http';
-import path from 'path';
+import cookieParser from 'cookie-parser';
 
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-global.__basedir = path.dirname(__filename);
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
-const server = http.createServer(app);
+// const port = 3000;
 
-var port = normalizePort(process.env.PORT || '7019');
+var port = normalizePort(process.env.PORT || 3000);
 
-app.use('/', express.static(path.join(path.resolve(), 'Public')));
+import { StartFunc as StartFuncFromMiddleware } from "./Token/MiddleWares/entryFile.js";
 
-app.get('/StartWA', (req, res) => {
-    StartFuncFromEntryFile().then();
-});
+import { router as routerFromSecret } from "./Secret/routes.js";
+import { router as routerFromUsers } from "./Users/routes.js";
+import { router as routerFromV1 } from "./V1/routes.js";
+import { router as routerFromSV1 } from "./SV1/routes.js";
 
-app.use("/ChatLog", (req, res) => {
-    const k1 = ReadFuncFromChatLog();
+app.use(express.static('Public'));
+app.use(cookieParser());
 
-    res.json(k1);
-});
-
-StartFuncKWSServer(server);
-
-server.listen(port, StartFuncPortListen);
+app.use("/Secret", routerFromSecret);
+app.use("/Users", routerFromUsers);
+app.use("/V1", routerFromV1);
+app.use("/SV1", StartFuncFromMiddleware, routerFromSV1);
 
 function normalizePort(val) {
     var port = parseInt(val, 10);
@@ -48,3 +37,8 @@ function normalizePort(val) {
 
     return false;
 };
+
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
+    console.log(`Open here http://localhost:${port}`);
+});
